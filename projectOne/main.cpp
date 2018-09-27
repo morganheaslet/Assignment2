@@ -18,6 +18,10 @@ char letters[26] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G',
                     'X', 'Y', 'Z'},
     digits[10] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
+string keywords[1] = { },
+        operators[1] = { },
+        separators[1] = { };
+
 int main() {
     cout << "Please enter the source file name: ";
     string sourceName;
