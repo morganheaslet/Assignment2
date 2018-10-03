@@ -23,11 +23,11 @@ string keywords[1] = { },
         separators[1] = { };
 
 int main() {
-    cout << "Please enter the source file name: ";
+    cout << "Please enter the source file's absolute location: ";
     string sourceName;
-    cin >> sourceName;
+    getline(cin, sourceName);
     fstream fileStream;
-    fileStream.open(sourceName + ".txt");
+    fileStream.open(sourceName);
     if(fileStream.is_open())
     {
         cout << "File Opened Successfully.\n";
