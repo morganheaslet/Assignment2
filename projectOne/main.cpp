@@ -9,39 +9,39 @@
 #include <fstream>
 #include <sstream>
 #include <cstring>
-using namespace std;
 
 //For FSM use
-char letters[26] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G',
+char digits[10] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+//For FSM use
+char letters[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G',
                     'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
                     'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
-                    'X', 'Y', 'Z'},
-    digits[10] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+                    'X', 'Y', 'Z'};
 
-string keywords[1] = { },
-        operators[1] = { },
-        separators[1] = { };
+std::string keywords[1] = { },
+        separators[1] = { },
+        operators[1] = { };
 
 int main() {
-    cout << "Please enter the source file's absolute location: ";
-    string sourceName;
-    getline(cin, sourceName);
-    fstream fileStream;
+    std::cout << "Please enter the source file's absolute location: ";
+    std::string sourceName;
+    getline(std::cin, sourceName);
+    std::fstream fileStream;
     fileStream.open(sourceName);
     if(fileStream.is_open())
     {
-        cout << "File Opened Successfully.\n";
+        std::cout << "File Opened Successfully.\n";
     }else{
-        cout << "File not found.\n";
+        std::cout << "File not found.\n";
         return 0;
     }
     
     
-    string line;
+    std::string line;
     while (getline(fileStream, line))
     {
-        stringstream linestream(line);
-        string token_str;
+        std::stringstream linestream(line);
+        std::string token_str;
         while (getline(linestream, token_str, ' '))
         {
             // token_cstr now has the cstring version of the token
@@ -51,7 +51,7 @@ int main() {
             char * p = strtok(token_cstr,"\t\r\n ");
             while (p!=0)
             {
-                cout << p << '\n';
+                std::cout << p << '\n';
                 p = strtok(NULL,"\t\r\n ");
             }
             delete[] token_cstr;
