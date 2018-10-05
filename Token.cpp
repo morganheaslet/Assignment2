@@ -46,7 +46,7 @@ void Token::printToken()
 		tokenTypeString = "UNKNOWN";
 		break;
 	case 1:
-		tokenTypeString = "OPERATOR";
+		tokenTypeString = "IDENTIFIER";
 		break;
 	case 2:
 		tokenTypeString = "DIGIT";
