@@ -1,4 +1,5 @@
- Find smallest value between numbers.
+[* Find smallest value between numbers.*]
+
 int a, b, small$
 if(a < b)
 {
