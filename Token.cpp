@@ -1,7 +1,4 @@
 #include "Token.h"
-#include <iomanip>
-#include <iostream>
-#include <fstream>
 
 Token::Token()
 {
@@ -39,9 +36,11 @@ state Token::getType()
 	return tokenType;
 }
 
-// Prints the token. Just using cout for now for testing but this should be able to print to the file as well
-void Token::printToken()
+// Converts the token type to it's string version and outputs the token type and lexeme to an output file (file name received as argument)
+void Token::printToken(std::string output)
 {
+	std::ofstream outputFile;
+	outputFile.open(output, std::ios_base::app);
 	std::string tokenTypeString;
 	switch (tokenType)
 	{
@@ -68,6 +67,6 @@ void Token::printToken()
 		break;
 	}
     
-
-    std::cout << std::setw(20) << std::left << lexeme << " - " << tokenTypeString << std::endl;
+	outputFile << std::setw(20) << std::left << lexeme << " - " << tokenTypeString << std::endl;
+	outputFile.close();
 }
