@@ -1,0 +1,10 @@
+ Find smallest value between numbers.
+int a, b, small$
+if(a < b)
+{
+	small = a$;
+}
+else
+{
+	small = b$;
+}
