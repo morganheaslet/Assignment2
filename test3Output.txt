@@ -1,0 +1,18 @@
+Lexeme                 Token
+int                  - KEYWORD
+a                    - IDENTIFIER
+b                    - IDENTIFIER
+small                - IDENTIFIER
+if                   - KEYWORD
+(                    - SEPARATOR
+a                    - IDENTIFIER
+<                    - OPERATOR
+b                    - IDENTIFIER
+)                    - SEPARATOR
+small                - IDENTIFIER
+=                    - OPERATOR
+a                    - IDENTIFIER
+else                 - KEYWORD
+small                - IDENTIFIER
+=                    - OPERATOR
+b                    - IDENTIFIER
