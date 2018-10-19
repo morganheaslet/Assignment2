@@ -8,6 +8,7 @@ Lexer::Lexer(std::string outputFileName)
 {
 	outputFile = outputFileName;
 	invalid = false;
+	emptyLine = true;
 
 	std::ofstream oFile;
 	oFile.open(outputFile);
@@ -19,20 +20,25 @@ Lexer::Lexer(std::string outputFileName)
 void Lexer::getLine(std::string inputLine)
 {
 	line = inputLine;
+	emptyLine = false;
 }
 
-void Lexer::parseLine()
+Token Lexer::getToken()
 {
 	char character;
-
 	// Takes each character is checks its type, sends the type to the FSM, and adds the character to the Lexeme string. Once broken up by a separater
 	// or whitespace, it checks the FSM to see if it's in a valid state. If it is, it prints the lexeme as a valid token. If not, it erases the lexeme
 	// and continues where it left off
 	for (unsigned int i = 0; i < line.length(); i++)
 	{
 		character = line.at(i);
-
 		// Checks to see if the current character is between comment brackets
+		if (character == '[' && line.at(i + 1) == '*')
+		{
+			invalid = true;
+			i++;
+		}
+
 		if (invalid == true)
 		{
 			// Checks to see if character is the ending comment bracket
@@ -40,19 +46,10 @@ void Lexer::parseLine()
 			{
 				invalid = false;
 				i++;
-				i++;
 			}
 		}
-
-		if (character == '[' && line.at(i + 1) == '*')
-		{
-			invalid = true;
-			i++;
-		}
-
 		// Checks if character is between comment brackets, and ignores character is so
-
-		if (invalid == false)
+		else if (invalid == false)
 		{
 			// Checks if character is an operator
 			if (character == '<' || character == '>' || character == '+' || character == '-' || character == '='
@@ -97,53 +94,59 @@ void Lexer::parseLine()
 					{
 						token.changeType(LETTER);
 					}
-					token.printToken(outputFile);
-					clearToken();
+
+					line = line.substr(i);
 					stateMachine.resetState();
+					return token;
 				}
 				// Prints an integer token and resets the state machine and token object if the current state is valid for integer
 				else if (stateMachine.getCurrentState() == 6)
 				{
 					token.changeType(DIGIT);
-					token.printToken(outputFile);
-					clearToken();
+					line = line.substr(i);
 					stateMachine.resetState();
+					return token;
 				}
 				// Prints a real token and resets the state machine and token object if the current state is valid for real
 				else if (stateMachine.getCurrentState() == 9)
 				{
 					token.changeType(REAL);
-					token.printToken(outputFile);
-					clearToken();
+					line = line.substr(i);
 					stateMachine.resetState();
+					return token;
 				}
 				// Prints an operator token and resets the state machine and token object if the current state is valid for operator
 				else if (stateMachine.getCurrentState() == 7 || stateMachine.getCurrentState() == 13)
 				{
 					token.changeType(OPERATOR);
-					token.printToken(outputFile);
-					clearToken();
+					line = line.substr(i);
 					stateMachine.resetState();
+					return token;
+				}
+				// Checks to see if the character is a valid separator (not whitespace)
+				else if (character == '(' || character == ')' || character == ',' || character == '{' || character == '}'
+					|| character == '$')
+				{
+					token.addLexeme(character);
+					token.changeType(SEPARATOR);
+					line = line.substr(i+1);
+					stateMachine.resetState();
+					return token;
 				}
 				// Invalid token if current state is not valid. Resets state machine and clears the token object
 				else
 				{
-					clearToken();
+					line = line.substr(i+1);
 					stateMachine.resetState();
-				}
-
-				// Checks to see if the character is a valid separator (not whitespace)
-				if (character == '(' || character == ')')
-				{
-					token.addLexeme(character);
-					token.changeType(SEPARATOR);
-					token.printToken(outputFile);
-					clearToken();
+					token.changeType(UNKNOWN);
+					return token;
 				}
 			}
 		}
 	}
 
+	emptyLine = true;
+	line = "";
 	// The below code checks if the last word in the line is valid (after the last character has been received)
 
 	// Prints a indentifier token and resets the state machine and token object
@@ -161,38 +164,32 @@ void Lexer::parseLine()
 		{
 			token.changeType(LETTER);
 		}
-		token.printToken(outputFile); // TESTING
-		clearToken();
+				
 		stateMachine.resetState();
+		return token;
 	}
 	// Prints an integer token and resets the state machine and token object
 	else if (stateMachine.getCurrentState() == 6)
 	{
 		token.changeType(DIGIT);
-		token.printToken(outputFile); // TESTING
-		clearToken();
 		stateMachine.resetState();
+		return token;
 	}
 	// Prints a real token and resets the state machine and token object
 	else if (stateMachine.getCurrentState() == 9)
 	{
 		token.changeType(REAL);
-		token.printToken(outputFile); // TESTING
-		clearToken();
 		stateMachine.resetState();
+		return token;
 	}
 	// Invalid token. Resets state machine and clears the token object
 	else
 	{
-		clearToken();
+		token.changeLexeme("");
+		token.changeType(UNKNOWN);
 		stateMachine.resetState();
+		return token;
 	}
-}
-
-// Returns the current token object
-Token Lexer::returnToken()
-{
-	return token;
 }
 
 // Clears the current token object
@@ -202,3 +199,7 @@ void Lexer::clearToken()
 	token.changeType(UNKNOWN);
 }
 
+bool Lexer::lineEmpty()
+{
+	return emptyLine;
+}

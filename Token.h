@@ -14,6 +14,7 @@ public:
 	void changeType(state newType);
 	std::string getLexeme();
 	state getType();
+	std::string GetTypeString();
     void printToken(std::string output);
 private:
 	std::string lexeme; // Lexeme
