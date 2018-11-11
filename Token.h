@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sstream>  
 #include <iomanip>
 #include "state.h"
 
@@ -12,10 +13,14 @@ public:
 	void changeLexeme(std::string newLexeme);
 	void addLexeme(char newChar);
 	void changeType(state newType);
+	void changeLineNum(int num);
 	std::string getLexeme();
 	state getType();
-    void printToken(std::string output);
+	std::string GetTypeString();
+	int getLineNum();
+    std::string printToken();
 private:
 	std::string lexeme; // Lexeme
 	state tokenType;    // Token type the lexeme belongs to (uses 'state' enum for readability)
+	int lineNum;
 };

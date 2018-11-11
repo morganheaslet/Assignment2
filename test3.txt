@@ -1,11 +1,40 @@
-[* Find smallest value between numbers.*]
+[* this is comment for this sample code which
+   converts  Fahrenheit into Celcius *]
 
-int a, b, small$
-if(a < b)
+function convert1x (fahr : int)
 {
-	small = a$;
+           return 5 * (fahr - 32) / 9;
 }
-else
-{
-	small = b$;
-}
+
+$$
+     int    low,  high, step;      [* declarations *]
+
+     get (low, high, step);
+
+     while (low  <  high )  
+         {  put (low);
+             put (convert1x  (low));
+             low =  low  +  step;
+         } 
+      whileend
+
+	while (high  <  low )  
+         {  put (high);
+             put (convert1x  (high));
+             high =  high  +  step;
+         } 
+      whileend
+
+	get (low, high, step);
+	get (low, high);
+	get (low);
+
+	get (low, high, step);
+	get (low, high);
+	get (low);
+
+	get (low, high, step);
+	get (low, high);
+	get (low);
+
+ $$

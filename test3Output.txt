@@ -1,18 +1,327 @@
-Lexeme                 Token
-int                  - KEYWORD
-a                    - IDENTIFIER
-b                    - IDENTIFIER
-small                - IDENTIFIER
-if                   - KEYWORD
-(                    - SEPARATOR
-a                    - IDENTIFIER
-<                    - OPERATOR
-b                    - IDENTIFIER
-)                    - SEPARATOR
-small                - IDENTIFIER
-=                    - OPERATOR
-a                    - IDENTIFIER
-else                 - KEYWORD
-small                - IDENTIFIER
-=                    - OPERATOR
-b                    - IDENTIFIER
+	<Opt Function Definitions>   $$  <Opt Declaration List>  <Statement List>  $$
+Token: KEYWORD        Lexeme : function
+	<Function Definitions>     |  <Empty>
+	<Function> | <Function> <Function Definitions>
+Token: IDENTIFIER     Lexeme : convert1x
+	function  <Identifier>(<Opt Parameter List>)  <Opt Declaration List>  <Body>
+Token: IDENTIFIER     Lexeme : convert1x
+Token: SEPARATOR      Lexeme : (
+Token: IDENTIFIER     Lexeme : fahr
+	<Parameter List> | <Empty>
+	<Parameter>    |     <Parameter> , <Parameter List>
+	<IDs > : <Qualifier> 
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : :
+	<Identifier>    | <Identifier>, <IDs>
+Token: KEYWORD        Lexeme : int
+	int     |    boolean    |  real 
+Token: SEPARATOR      Lexeme : )
+Token: SEPARATOR      Lexeme : {
+	{  < Statement List>  }
+Token: KEYWORD        Lexeme : return
+	<Statement>   | <Statement> <Statement List> 
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	return ; |  return <Expression> ;
+Token: DIGIT          Lexeme : 5
+	<Expression> + <Term>    | <Expression>  - <Term>    |    <Term>
+	<Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+Token: OPERATOR       Lexeme : *
+Token: SEPARATOR      Lexeme : (
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+	<Expression> + <Term>    | <Expression>  - <Term>    |    <Term>
+	<Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+Token: OPERATOR       Lexeme : -
+Token: DIGIT          Lexeme : 32
+	<Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+Token: SEPARATOR      Lexeme : )
+Token: OPERATOR       Lexeme : /
+Token: DIGIT          Lexeme : 9
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+Token: SEPARATOR      Lexeme : ;
+Token: SEPARATOR      Lexeme : }
+Token: OPERATOR       Lexeme : $$
+Token: KEYWORD        Lexeme : int
+	<Declaration List>   |    <Empty>
+	<Declaration> ;     |      <Declaration> ; <Declaration List>
+	<Qualifier > <IDs>    
+	int     |    boolean    |  real 
+Token: IDENTIFIER     Lexeme : low
+	<Identifier>    | <Identifier>, <IDs>
+Token: IDENTIFIER     Lexeme : high
+	<Identifier>    | <Identifier>, <IDs>
+Token: IDENTIFIER     Lexeme : step
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : ;
+	<Identifier>    | <Identifier>, <IDs>
+Token: KEYWORD        Lexeme : get
+	<Statement>   | <Statement> <Statement List> 
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	get ( <IDs> );
+Token: SEPARATOR      Lexeme : (
+Token: IDENTIFIER     Lexeme : low
+	<Identifier>    | <Identifier>, <IDs>
+Token: IDENTIFIER     Lexeme : high
+	<Identifier>    | <Identifier>, <IDs>
+Token: IDENTIFIER     Lexeme : step
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : )
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : ;
+Token: KEYWORD        Lexeme : while
+	<Statement>   | <Statement> <Statement List> 
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	while ( <Condition>  )  <Statement>  whileend
+	ENTERING WHILEToken: SEPARATOR      Lexeme : (
+Token: IDENTIFIER     Lexeme : low
+	<Expression>  <Relop>   <Expression>
+	<Expression> + <Term>    | <Expression>  - <Term>    |    <Term>
+	<Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+Token: OPERATOR       Lexeme : <
+	==   |   ^=    |   >     |   <    |   =>    |   =<  
+Token: IDENTIFIER     Lexeme : high
+	<Expression> + <Term>    | <Expression>  - <Term>    |    <Term>
+	<Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+Token: SEPARATOR      Lexeme : )
+Token: SEPARATOR      Lexeme : {
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	 {  <Statement List>  } 
+Token: KEYWORD        Lexeme : put
+	<Statement>   | <Statement> <Statement List> 
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	put ( <Expression>);
+Token: SEPARATOR      Lexeme : (
+Token: IDENTIFIER     Lexeme : low
+	<Expression> + <Term>    | <Expression>  - <Term>    |    <Term>
+	<Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+Token: SEPARATOR      Lexeme : )
+Token: SEPARATOR      Lexeme : ;
+Token: KEYWORD        Lexeme : put
+	<Statement>   | <Statement> <Statement List> 
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	put ( <Expression>);
+Token: SEPARATOR      Lexeme : (
+Token: IDENTIFIER     Lexeme : convert1x
+	<Expression> + <Term>    | <Expression>  - <Term>    |    <Term>
+	<Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+Token: SEPARATOR      Lexeme : (
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+	<Expression> + <Term>    | <Expression>  - <Term>    |    <Term>
+	<Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+Token: SEPARATOR      Lexeme : )
+Token: SEPARATOR      Lexeme : )
+Token: SEPARATOR      Lexeme : ;
+Token: IDENTIFIER     Lexeme : low
+	<Statement>   | <Statement> <Statement List> 
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	<Identifier> = <Expression> ;
+Token: IDENTIFIER     Lexeme : low
+	<Expression> + <Term>    | <Expression>  - <Term>    |    <Term>
+	<Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+Token: OPERATOR       Lexeme : +
+Token: IDENTIFIER     Lexeme : step
+	<Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+Token: SEPARATOR      Lexeme : ;
+Token: SEPARATOR      Lexeme : }
+Token: KEYWORD        Lexeme : while
+	<Statement>   | <Statement> <Statement List> 
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	while ( <Condition>  )  <Statement>  whileend
+	ENTERING WHILEToken: SEPARATOR      Lexeme : (
+Token: IDENTIFIER     Lexeme : high
+	<Expression>  <Relop>   <Expression>
+	<Expression> + <Term>    | <Expression>  - <Term>    |    <Term>
+	<Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+Token: OPERATOR       Lexeme : <
+	==   |   ^=    |   >     |   <    |   =>    |   =<  
+Token: IDENTIFIER     Lexeme : low
+	<Expression> + <Term>    | <Expression>  - <Term>    |    <Term>
+	<Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+Token: SEPARATOR      Lexeme : )
+Token: SEPARATOR      Lexeme : {
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	 {  <Statement List>  } 
+Token: KEYWORD        Lexeme : put
+	<Statement>   | <Statement> <Statement List> 
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	put ( <Expression>);
+Token: SEPARATOR      Lexeme : (
+Token: IDENTIFIER     Lexeme : high
+	<Expression> + <Term>    | <Expression>  - <Term>    |    <Term>
+	<Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+Token: SEPARATOR      Lexeme : )
+Token: SEPARATOR      Lexeme : ;
+Token: KEYWORD        Lexeme : put
+	<Statement>   | <Statement> <Statement List> 
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	put ( <Expression>);
+Token: SEPARATOR      Lexeme : (
+Token: IDENTIFIER     Lexeme : convert1x
+	<Expression> + <Term>    | <Expression>  - <Term>    |    <Term>
+	<Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+Token: SEPARATOR      Lexeme : (
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+	<Expression> + <Term>    | <Expression>  - <Term>    |    <Term>
+	<Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+Token: SEPARATOR      Lexeme : )
+Token: SEPARATOR      Lexeme : )
+Token: SEPARATOR      Lexeme : ;
+Token: IDENTIFIER     Lexeme : high
+	<Statement>   | <Statement> <Statement List> 
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	<Identifier> = <Expression> ;
+Token: IDENTIFIER     Lexeme : high
+	<Expression> + <Term>    | <Expression>  - <Term>    |    <Term>
+	<Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+Token: OPERATOR       Lexeme : +
+Token: IDENTIFIER     Lexeme : step
+	<Term>  *  <Factor>     |   <Term>  /  <Factor>     |     <Factor>
+	<Primary>    |    <Primary>
+	<Identifier>  |  <Integer>  |   <Identifier>  ( <IDs> )   |   ( <Expression> )   |   <Real> | true | false 
+Token: SEPARATOR      Lexeme : ;
+Token: SEPARATOR      Lexeme : }
+Token: KEYWORD        Lexeme : get
+	<Statement>   | <Statement> <Statement List> 
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	get ( <IDs> );
+Token: SEPARATOR      Lexeme : (
+Token: IDENTIFIER     Lexeme : low
+	<Identifier>    | <Identifier>, <IDs>
+Token: IDENTIFIER     Lexeme : high
+	<Identifier>    | <Identifier>, <IDs>
+Token: IDENTIFIER     Lexeme : step
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : )
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : ;
+Token: KEYWORD        Lexeme : get
+	<Statement>   | <Statement> <Statement List> 
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	get ( <IDs> );
+Token: SEPARATOR      Lexeme : (
+Token: IDENTIFIER     Lexeme : low
+	<Identifier>    | <Identifier>, <IDs>
+Token: IDENTIFIER     Lexeme : high
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : )
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : ;
+Token: KEYWORD        Lexeme : get
+	<Statement>   | <Statement> <Statement List> 
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	get ( <IDs> );
+Token: SEPARATOR      Lexeme : (
+Token: IDENTIFIER     Lexeme : low
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : )
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : ;
+Token: KEYWORD        Lexeme : get
+	<Statement>   | <Statement> <Statement List> 
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	get ( <IDs> );
+Token: SEPARATOR      Lexeme : (
+Token: IDENTIFIER     Lexeme : low
+	<Identifier>    | <Identifier>, <IDs>
+Token: IDENTIFIER     Lexeme : high
+	<Identifier>    | <Identifier>, <IDs>
+Token: IDENTIFIER     Lexeme : step
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : )
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : ;
+Token: KEYWORD        Lexeme : get
+	<Statement>   | <Statement> <Statement List> 
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	get ( <IDs> );
+Token: SEPARATOR      Lexeme : (
+Token: IDENTIFIER     Lexeme : low
+	<Identifier>    | <Identifier>, <IDs>
+Token: IDENTIFIER     Lexeme : high
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : )
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : ;
+Token: KEYWORD        Lexeme : get
+	<Statement>   | <Statement> <Statement List> 
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	get ( <IDs> );
+Token: SEPARATOR      Lexeme : (
+Token: IDENTIFIER     Lexeme : low
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : )
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : ;
+Token: KEYWORD        Lexeme : get
+	<Statement>   | <Statement> <Statement List> 
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	get ( <IDs> );
+Token: SEPARATOR      Lexeme : (
+Token: IDENTIFIER     Lexeme : low
+	<Identifier>    | <Identifier>, <IDs>
+Token: IDENTIFIER     Lexeme : high
+	<Identifier>    | <Identifier>, <IDs>
+Token: IDENTIFIER     Lexeme : step
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : )
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : ;
+Token: KEYWORD        Lexeme : get
+	<Statement>   | <Statement> <Statement List> 
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	get ( <IDs> );
+Token: SEPARATOR      Lexeme : (
+Token: IDENTIFIER     Lexeme : low
+	<Identifier>    | <Identifier>, <IDs>
+Token: IDENTIFIER     Lexeme : high
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : )
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : ;
+Token: KEYWORD        Lexeme : get
+	<Statement>   | <Statement> <Statement List> 
+	<Compound>  |  <Assign>  |   <If>  |  <Return>   | <Print>   |   <Scan>   |  <While>
+	get ( <IDs> );
+Token: SEPARATOR      Lexeme : (
+Token: IDENTIFIER     Lexeme : low
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : )
+	<Identifier>    | <Identifier>, <IDs>
+Token: SEPARATOR      Lexeme : ;
+Token: OPERATOR       Lexeme : $$
+	Successfully parsed.
