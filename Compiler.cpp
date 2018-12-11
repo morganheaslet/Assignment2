@@ -191,6 +191,7 @@ void Compiler::Qualifier()
 {
 	if (printFunctions)
 		oFile << "\tint     |    boolean    |  real \n";
+	current_type = iter->getLexeme();
 	iter++;
 	oFile << iter->printToken();
 }
@@ -258,6 +259,8 @@ void Compiler::IDs()
 
 	if (iter->GetTypeString() == "IDENTIFIER")
 	{
+		iter->setType( current_type );
+		get_address(*iter);
 		iter++;
 		oFile << iter->printToken();
 		IDs();
@@ -318,6 +321,8 @@ void Compiler::Assign()
 {
 	if (printFunctions)
 		oFile << "\t<Identifier> = <Expression> ;\n";
+	//saved token
+	Token saved_token = *iter;
 
 	iter++;
 	if (iter->getLexeme() == "=")
@@ -325,6 +330,7 @@ void Compiler::Assign()
 		iter++;
 		oFile << iter->printToken();
 		Expression();
+		get_instr("POPM", std::to_string(get_address(saved_token)) );
 	}
 	else
 		Error("Assign");
@@ -342,6 +348,7 @@ void Compiler::If()
 	if (printFunctions)
 		oFile << "\tif  ( <Condition>  ) <Statement>   ifend    |	if (<Condition>) <Statement>   else  <Statement>  ifend \n";
 
+	current_address = current_instruction_address;
 	iter++;
 	oFile << iter->printToken();
 
@@ -356,7 +363,7 @@ void Compiler::If()
 		else
 		{
 			Statement();
-
+			back_patch(current_instruction_address);
 			if (iter->getLexeme() != "ifend" || iter->getLexeme() != "else")
 				Error("If");
 			else
@@ -408,7 +415,7 @@ void Compiler::Print()
 {
 	if (printFunctions)
 		oFile << "\tput ( <Expression>);\n";
-
+	get_instr("STDOUT", "NULL");
 	iter++;
 	oFile << iter->printToken();
 	if (iter->getLexeme() == "(")
@@ -436,7 +443,7 @@ void Compiler::Scan()
 {
 	if (printFunctions)
 		oFile << "\tget ( <IDs> );\n";
-
+	get_instr("STDIN", "NULL");
 	iter++;
 	oFile << iter->printToken();
 
@@ -444,7 +451,7 @@ void Compiler::Scan()
 	{
 		iter++;
 		oFile << iter->printToken();
-
+		get_instr("POPM", std::to_string(get_address(*iter)) );
 		IDs();
 	}
 	else
@@ -468,8 +475,12 @@ void Compiler::While()
 {
 	if (printFunctions)
 		oFile << "\twhile ( <Condition>  )  <Statement>  whileend\n";
+	if (printFunctions)
+		oFile << "\tENTERING WHILE";
 
-	oFile << "\tENTERING WHILE";
+	current_address = current_instruction_address;
+	get_instr("LABEL", "NULL");
+
 	iter++;
 	oFile << iter->printToken();
 	if (iter->getLexeme() == "(")
@@ -486,8 +497,10 @@ void Compiler::While()
 
 	iter++;
 	oFile << iter->printToken();
-
 	Statement();
+	get_instr("JUMP", std::to_string(current_address));
+	back_patch(current_instruction_address);
+
 
 	if (iter->getLexeme() != "whileend")
 		Error("While");
@@ -525,6 +538,41 @@ void Compiler::Relop()
 {
 	if (printFunctions)
 		oFile << "\t==   |   ^=    |   >     |   <    |   =>    |   =<  \n";
+	std::string op = iter->getLexeme();
+	iter++;
+	get_instr("PUSHM", std::to_string(get_address(*iter)));
+	iter--;
+	if (op == "==") {
+		get_instr("EQU", "NULL");
+		jump_stack.push(current_instruction_address);
+		get_instr("JUMPZ", "NULL");
+	}
+	else if (op == "^=") {
+		get_instr("NEQ", "NULL");
+		jump_stack.push(current_instruction_address);
+		get_instr("JUMPZ", "NULL");
+	}
+	else if (op == ">") {
+		get_instr("GRT", "NULL");
+		jump_stack.push(current_instruction_address);
+		get_instr("JUMPZ", "NULL");
+	}
+	else if (op == "<") {
+		get_instr("LES", "NULL");
+		jump_stack.push(current_instruction_address);
+		get_instr("JUMPZ", "NULL");
+	}
+	else if (op == "=>") {
+		get_instr("GEQ", "NULL");
+		jump_stack.push(current_instruction_address);
+		get_instr("JUMPZ", "NULL");
+	}
+	else if (op == "=<") {
+		get_instr("LEQ", "NULL");
+		jump_stack.push(current_instruction_address);
+		get_instr("JUMPZ", "NULL");
+	}
+
 
 	iter++;
 	oFile << iter->printToken();
@@ -538,12 +586,18 @@ void Compiler::Expression()
 		iter->getLexeme() == "true" || iter->getLexeme() == "false" || iter->getLexeme() == "+" || iter->getLexeme() == "-"
 		|| iter->getLexeme() == "(")
 	{
-		if (iter->getLexeme() == "+" || iter->getLexeme() == "-")
+		if (iter->getLexeme() == "+")
 		{
 			iter++;
 			oFile << iter->printToken();
+			get_instr("ADD", "NULL");
 		}
-
+		else if (iter->getLexeme() == "-")
+		{
+			iter++;
+			oFile << iter->printToken();
+			get_instr("SUB", "NULL");
+		}
 		else
 			Term();
 	}
@@ -557,10 +611,19 @@ void Compiler::Term()
 		iter->getLexeme() == "true" || iter->getLexeme() == "false" || iter->getLexeme() == "*" || iter->getLexeme() == "/"
 		|| iter->getLexeme() == "(")
 	{
-		if (iter->getLexeme() == "*" || iter->getLexeme() == "/")
+		if (iter->getLexeme() == "*")
 		{
+
 			iter++;
 			oFile << iter->printToken();
+			get_instr("MUL", "NULL");
+		}
+		else if(iter->getLexeme() == "/")
+		{
+
+			iter++;
+			oFile << iter->printToken();
+			get_instr("DIV", "NULL");
 		}
 		else
 			Factor();
@@ -593,6 +656,8 @@ void Compiler::Primary()
 	else if (iter->GetTypeString() == "DIGIT" || iter->GetTypeString() == "REAL" || iter->getLexeme() == "true" ||
 		iter->getLexeme() == "false")
 	{
+		if (iter->GetTypeString() == "DIGIT")
+			get_instr("PUSHI", iter->getLexeme());
 		iter++;
 		oFile << iter->printToken();
 	}
@@ -611,6 +676,7 @@ void Compiler::Primary()
 		}
 		else
 		{
+			
 			iter++;
 			oFile << iter->printToken();
 		}
@@ -631,4 +697,77 @@ void Compiler::Error(std::string error)
 		oFile << iter->printToken();
 		oFile << "thas caused an error on line " << iter->getLineNum() << ".\n";
 	}
+}
+
+void Compiler::PrintInstructionTable() 
+{
+	int size = instructionTable.size();
+
+	oFile << "\nADDRESS\tOP\tOPERAND\n";
+	for (int i = 0; i < size; i++) 
+	{
+		oFile << instructionTable[i].address << "\t" << instructionTable[i].op << "\t";
+		if (instructionTable[i].oprnd != "NULL")
+			oFile << instructionTable[i].oprnd << "\n";
+		else
+			oFile << "\n";
+	}
+}
+
+void Compiler::PrintSymbolTable() 
+{
+	int size = symbolTable.size();
+
+	oFile << "\nIDENTIFIER\tMEMORY LOCATION\tTYPE\n";
+	for (int i = 0; i < size; i++)
+	{
+		oFile << symbolTable[i].identifier << "\t\t"
+			<< symbolTable[i].memoryLocation << "\t"
+			<< symbolTable[i].type << "\n";
+	}
+}
+
+void Compiler::get_instr(std::string op, std::string oprnd)
+{
+	Instruction_Table currentInstruction;
+	currentInstruction.address = current_instruction_address;
+	currentInstruction.op = op;
+	currentInstruction.oprnd = oprnd;
+	instructionTable.push_back(currentInstruction);
+	current_instruction_address++;
+}
+
+int Compiler::get_address(Token thisToken) 
+{
+	std::string identifier = thisToken.getLexeme();
+	int size = symbolTable.size();
+	int location = 0;
+	for (int i = 0; i < size; i++) 
+	{
+		if (identifier == symbolTable[i].identifier)
+			location = symbolTable[i].memoryLocation;
+	}
+	if (location == 0) {
+		Symbol newSymbol;
+		newSymbol.identifier = thisToken.getLexeme();
+		newSymbol.memoryLocation = current_memory_location;
+		newSymbol.type = thisToken.getSymbolType();
+
+		symbolTable.push_back(newSymbol);
+		location = current_memory_location;
+		current_memory_location++;
+
+		return location;
+	}
+	else {
+		return location;
+	}
+}
+
+void Compiler::back_patch(int instr_address) 
+{
+	int patch_address = jump_stack.top();
+	jump_stack.pop();
+	instructionTable[patch_address-1].oprnd = std::to_string(instr_address);
+
 }
